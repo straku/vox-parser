@@ -1,0 +1,15 @@
+{
+  "name": "vox-reader",
+  "version": "0.1.0",
+  "description": "Vox format reader",
+  "main": "index.js",
+  "author": "Łukasz Strączyński <l.straczynski@hotmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "format": "prettier --write --single-quote --trailing-comma=es5 --parser=flow src/**/*.js",
+    "start": "node src/parser.js"
+  },
+  "devDependencies": {
+    "prettier": "1.2.2"
+  }
+}
