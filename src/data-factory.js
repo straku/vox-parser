@@ -1,5 +1,5 @@
-const dataFactory = rawBuffer => {
-  const data = new DataView(rawBuffer.buffer);
+const dataFactory = buffer => {
+  const data = new DataView(buffer);
   let offset = 0;
 
   return {

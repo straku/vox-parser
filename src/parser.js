@@ -1,8 +1,4 @@
-const fs = require('fs');
-
-const log = require('./logger');
 const { PARSERS } = require('./chunk-parsers');
-
 const { dataFactory } = require('./data-factory');
 
 const readHead = data => ({
@@ -37,7 +33,9 @@ const readBody = data => {
   return body;
 };
 
-const parse = data => {
+const parse = buffer => {
+  const data = dataFactory(buffer);
+
   const head = readHead(data);
   if (head.id !== 'VOX ') {
     throw new Error(
@@ -61,9 +59,4 @@ const parse = data => {
   };
 };
 
-fs.readFile('./resources/horse.vox', (err, rawBuffer) => {
-  if (err) throw new Error(err);
-  const data = dataFactory(rawBuffer);
-  const parsed = parse(data);
-  log(parsed);
-});
+exports.parse = parse;
