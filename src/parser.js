@@ -1,67 +1,69 @@
 const fs = require('fs');
 
 const log = require('./logger');
-const { parseNumber, parseString } = require('./value-parsers');
 const { PARSERS } = require('./chunk-parsers');
 
-const readHead = array => ({
-  id: parseString(array, 0, 4),
-  version: parseNumber(array, 4, 8),
-  offset: 8,
+const { dataFactory } = require('./data-factory');
+
+const readHead = data => ({
+  id: data.nextString(),
+  version: data.nextInt(),
 });
 
-const readBasicChunkData = (array, offset) => ({
-  id: parseString(array, offset, offset + 4),
-  numContent: parseNumber(array, offset + 4, offset + 8),
-  numChildren: parseNumber(array, offset + 8, offset + 12),
-  offset: offset + 12,
+const readBasicChunkData = data => ({
+  id: data.nextString(),
+  numContent: data.nextInt(),
+  numChildren: data.nextInt(),
 });
 
-const readChunk = (array, offset) => {
-  const chunk = readBasicChunkData(array, offset);
-  // log(chunk);
-  return PARSERS[chunk.id](array, chunk.offset);
+const readChunk = data => {
+  const chunk = readBasicChunkData(data);
+  const parser = PARSERS[chunk.id];
+  if (typeof parser === 'function') {
+    return Object.assign(chunk, {
+      content: parser(data),
+    });
+  } else {
+    throw new Error(`Corrupted file, cannor read chunk: '${chunk.id}'`);
+  }
 };
 
-const readBody = (array, offset) => {
+const readBody = data => {
   let body = [];
-  while (offset < array.length) {
-    const chunk = readChunk(array, offset);
-    // log(chunk);
-    body.push(chunk.data);
-    offset = chunk.offset;
+  while (data.hasNext()) {
+    const chunk = readChunk(data);
+    body.push(chunk);
   }
   return body;
 };
 
-const parse = array => {
-  const head = readHead(array);
+const parse = data => {
+  const head = readHead(data);
   if (head.id !== 'VOX ') {
     throw new Error(
       `Invalid file format: expected id 'VOX ', found: '${head.id}'`
     );
   }
-  if (head.version !== 150) {
-    throw new Error(
-      `Invalid file format: expected version 150, found: ${head.version}`
-    );
-  }
 
-  const mainChunk = readBasicChunkData(array, head.offset);
+  const mainChunk = readBasicChunkData(data);
   if (mainChunk.id !== 'MAIN') {
     throw new Error(
       `Invalid file format: expected first chunk to have id 'MAIN, found: ${id}`
     );
   }
 
-  const body = readBody(array, mainChunk.offset);
-
-  return body;
+  return {
+    id: head.id,
+    version: head.version,
+    body: Object.assign(mainChunk, {
+      children: readBody(data),
+    }),
+  };
 };
 
-fs.readFile('./resources/horse.vox', (err, buffer) => {
+fs.readFile('./resources/horse.vox', (err, rawBuffer) => {
   if (err) throw new Error(err);
-  const array = new Uint8Array(buffer);
-  const parsed = parse(array);
+  const data = dataFactory(rawBuffer);
+  const parsed = parse(data);
   log(parsed);
 });

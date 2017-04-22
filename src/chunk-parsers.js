@@ -1,55 +1,24 @@
-const {
-  parseNumber,
-  parseString,
-  parseNumberFloat,
-} = require('./value-parsers');
-
-const parsePattern = (
-  array,
-  offset,
-  pattern,
-  bytes = 4,
-  skipOffset = false
-) => {
-  let chunk = {};
-  pattern.forEach(coord => {
-    const end = offset + bytes;
-    chunk[coord] = parseNumber(array, offset, end);
-    offset = end;
-  });
-  const result = { data: chunk };
-  return skipOffset ? result : Object.assign(result, { offset });
-};
-
-const parsePackChunk = (array, offset) => ({
-  data: {
-    numModels: parseNumber(array, offset, offset + 4),
-  },
-  offset: offset + 4,
+const parsePackChunk = data => ({
+  numModels: data.nextInt(),
 });
 
-const parseSizeChunk = (array, offset) =>
-  parsePattern(array, offset, ['x', 'y', 'z']);
+const parseSizeChunk = data => data.nextPattern(['x', 'y', 'z'], 4);
 
-const parseXYZIChunk = (array, offset) => {
-  const numVoxels = parseNumber(array, offset, offset + 4);
-  offset = offset + 4;
+const parseXYZIChunk = data => {
+  const numVoxels = data.nextInt();
   let voxels = [];
   for (let i = 0; i < numVoxels; i++) {
-    const voxel = parsePattern(array, offset, ['x', 'y', 'z', 'i'], 1);
-    voxels.push(voxel.data);
-    offset = voxel.offset;
+    voxels.push(data.nextPattern(['x', 'y', 'z', 'i'], 1));
   }
-  return { data: voxels, offset };
+  return { numVoxels, voxels };
 };
 
-const parseRGBAChunk = (array, offset) => {
-  let chunk = [];
+const parseRGBAChunk = data => {
+  let palette = [];
   for (let i = 0; i < 256; i++) {
-    const newOffset = offset + i * 4;
-    chunk.push(parsePattern(array, newOffset, ['r', 'g', 'b', 'a'], 1, true));
+    palette.push(data.nextPattern(['r', 'g', 'b', 'a'], 1));
   }
-  return { data: chunk, offset: offset + 1024 };
+  return { palette };
 };
 
 const MATERIAL_TYPE = {
@@ -70,11 +39,11 @@ const PROPERTIES = [
   'isTotalPower',
 ];
 
-const parseMattChunk = (array, offset) => {
-  const id = parseNumber(array, offset, offset + 4);
-  const materialType = parseNumber(array, offset + 4, offset + 8);
-  const materialWeight = parseNumberFloat(array, offset + 8, offset + 12);
-  const propertyBits = parseNumber(array, offset + 12, offset + 16);
+const parseMattChunk = data => {
+  const id = data.nextInt();
+  const materialType = data.nextInt();
+  const materialWeight = data.nextInt();
+  const propertyBits = data.nextInt();
   const propertyFlags = [
     propertyBits & 1,
     propertyBits & 2,
@@ -85,14 +54,12 @@ const parseMattChunk = (array, offset) => {
     propertyBits & 64,
     propertyBits & 128,
   ];
-  offset += 16;
   const properties = propertyFlags
     .map((flag, i) => ({ property: PROPERTIES[i], flag }))
     .filter(({ flag }) => flag)
     .map(({ property }, i) => {
       if (property !== 'isTotalPower') {
-        const value = parseNumberFloat(array, offset, offset + 4);
-        offset += 4;
+        const value = data.nextFloat();
         return { property, value };
       } else {
         return { property };
@@ -100,13 +67,10 @@ const parseMattChunk = (array, offset) => {
     });
 
   return {
-    data: {
-      id,
-      materialType: MATERIAL_TYPE[materialType],
-      materialWeight,
-      properties,
-    },
-    offset,
+    id,
+    materialType: MATERIAL_TYPE[materialType],
+    materialWeight,
+    properties,
   };
 };
 
