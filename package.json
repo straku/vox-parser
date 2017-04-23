@@ -9,6 +9,7 @@
   ],
   "main": "lib/vox-parser.cjs.js",
   "module": "lib/vox-parser.es.js",
+  "browser": "lib/vox-parser.umd.js",
   "scripts": {
     "format": "prettier --write --single-quote --trailing-comma=es5 --parser=flow src/**/*.js",
     "clean": "rimraf lib",
