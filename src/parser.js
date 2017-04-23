@@ -1,5 +1,5 @@
-const { PARSERS } = require('./chunk-parsers');
-const { dataFactory } = require('./data-factory');
+import { PARSERS } from './chunk-parsers';
+import { dataFactory } from './data-factory';
 
 const readHead = data => ({
   id: data.nextString(),
@@ -33,7 +33,7 @@ const readBody = data => {
   return body;
 };
 
-const parse = buffer => {
+export const parse = buffer => {
   const data = dataFactory(buffer);
 
   const head = readHead(data);
@@ -58,5 +58,3 @@ const parse = buffer => {
     }),
   };
 };
-
-exports.parse = parse;

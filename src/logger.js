@@ -1,6 +1,6 @@
-const { inspect } = require('util');
+import { inspect } from 'util';
 
-const log = data => {
+export const log = data => {
   console.log(
     inspect(data, {
       depth: null,
@@ -8,5 +8,3 @@ const log = data => {
     })
   );
 };
-
-exports.log = log;

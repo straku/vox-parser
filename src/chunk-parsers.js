@@ -74,12 +74,10 @@ const parseMattChunk = data => {
   };
 };
 
-const PARSERS = {
+export const PARSERS = {
   PACK: parsePackChunk,
   SIZE: parseSizeChunk,
   XYZI: parseXYZIChunk,
   RGBA: parseRGBAChunk,
   MATT: parseMattChunk,
 };
-
-exports.PARSERS = PARSERS;

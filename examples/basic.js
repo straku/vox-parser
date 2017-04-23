@@ -1,8 +1,8 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-const { parse } = require('../src/parser');
-const { log } = require('../src/logger');
+import { parse } from '../src/index';
+import { log } from '../src/logger';
 
 fs.readFile(path.join(__dirname, 'horse.vox'), (err, rawBuffer) => {
   if (err) throw new Error(err);

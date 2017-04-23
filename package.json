@@ -1,15 +1,37 @@
 {
-  "name": "vox-reader",
+  "name": "vox-parser",
   "version": "0.1.0",
-  "description": "Vox format reader",
-  "main": "index.js",
+  "description": "Vox format parser",
   "author": "Łukasz Strączyński <l.straczynski@hotmail.com>",
   "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "main": "lib/vox-parser.cjs.js",
+  "module": "lib/vox-parser.es.js",
   "scripts": {
     "format": "prettier --write --single-quote --trailing-comma=es5 --parser=flow src/**/*.js",
-    "start": "node src/parser.js"
+    "clean": "rimraf lib",
+    "compile": "babel src -d lib",
+    "example": "cd examples && babel-node",
+    "prepublish": "npm run build",
+    "prebuild": "npm run clean",
+    "build": "npm-run-all build-*",
+    "build-es": "rollup --config --environment FORMAT:es",
+    "build-cjs": "rollup --config --environment FORMAT:cjs",
+    "build-umd": "rollup --config --environment FORMAT:umd",
+    "build-min-umd": "rollup --config --environment FORMAT:umd,MINIFY"
   },
   "devDependencies": {
-    "prettier": "1.2.2"
+    "babel-cli": "6.24.1",
+    "babel-core": "6.24.1",
+    "babel-plugin-external-helpers": "6.22.0",
+    "babel-preset-env": "1.4.0",
+    "npm-run-all": "4.0.2",
+    "prettier": "1.2.2",
+    "rimraf": "2.6.1",
+    "rollup": "0.41.6",
+    "rollup-plugin-babel": "2.7.1",
+    "rollup-plugin-uglify": "1.0.2"
   }
 }

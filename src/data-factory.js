@@ -1,4 +1,4 @@
-const dataFactory = buffer => {
+export const dataFactory = buffer => {
   const data = new DataView(buffer);
   let offset = 0;
 
@@ -43,5 +43,3 @@ const dataFactory = buffer => {
     },
   };
 };
-
-exports.dataFactory = dataFactory;

@@ -2,6 +2,7 @@
   "eslint.enable": false,
   "flow.enabled": false,
   "editor.formatOnSave": true,
+  "json.format.enable": false,
   "prettier.printWidth": 80,
   "prettier.tabWidth": 2,
   "prettier.singleQuote": true,
