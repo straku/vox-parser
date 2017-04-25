@@ -1,6 +1,6 @@
 {
   "name": "vox-parser",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Vox format parser",
   "author": "Łukasz Strączyński <l.straczynski@hotmail.com>",
   "license": "MIT",
