@@ -1,6 +1,6 @@
 # vox-parser
 
-`vox-reader` is a small library (currently UMD bundle weights `1.1 kB` gzipped) for parsing voxel models saved in vox format used by [MagicalVoxel][magical-voxel]. Example models and specification of `vox` file format can be found [here][vox-format-repo].
+`vox-parser` is a small library (currently UMD bundle weights `1.1 kB` gzipped) for parsing voxel models saved in vox format used by [MagicalVoxel][magical-voxel]. Example models and specification of `vox` file format can be found [here][vox-format-repo].
 
 ## Installation
 
