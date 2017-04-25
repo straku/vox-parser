@@ -42,7 +42,7 @@ const PROPERTIES = [
 const parseMattChunk = data => {
   const id = data.nextInt();
   const materialType = data.nextInt();
-  const materialWeight = data.nextInt();
+  const materialWeight = data.nextFloat();
   const propertyBits = data.nextInt();
   const propertyFlags = [
     propertyBits & 1,
