@@ -21,23 +21,7 @@ const parseRGBAChunk = data => {
   return { palette };
 };
 
-const MATERIAL_TYPE = {
-  0: 'diffuse',
-  1: 'metal',
-  2: 'glass',
-  3: 'emissive',
-};
-
-const PROPERTIES = [
-  'plastic',
-  'roughness',
-  'specular',
-  'ior',
-  'attenuation',
-  'power',
-  'glow',
-  'isTotalPower',
-];
+const MATERIAL_TYPE = ['diffuse', 'metal', 'glass', 'emissive'];
 
 const parseMattChunk = data => {
   const id = data.nextInt();
@@ -45,26 +29,19 @@ const parseMattChunk = data => {
   const materialWeight = data.nextFloat();
   const propertyBits = data.nextInt();
   const propertyFlags = [
-    propertyBits & 1,
-    propertyBits & 2,
-    propertyBits & 4,
-    propertyBits & 8,
-    propertyBits & 16,
-    propertyBits & 32,
-    propertyBits & 64,
-    propertyBits & 128,
+    (propertyBits & 1) > 0 && 'plastic',
+    (propertyBits & 2) > 0 && 'roughness',
+    (propertyBits & 4) > 0 && 'specular',
+    (propertyBits & 8) > 0 && 'ior',
+    (propertyBits & 16) > 0 && 'attenuation',
+    (propertyBits & 32) > 0 && 'power',
+    (propertyBits & 64) > 0 && 'glow',
+    (propertyBits & 128) > 0 && 'isTotalPower',
   ];
-  const properties = propertyFlags
-    .map((flag, i) => ({ property: PROPERTIES[i], flag }))
-    .filter(({ flag }) => flag)
-    .map(({ property }, i) => {
-      if (property !== 'isTotalPower') {
-        const value = data.nextFloat();
-        return { property, value };
-      } else {
-        return { property };
-      }
-    });
+  const properties = propertyFlags.filter(Boolean).map(property => ({
+    property,
+    value: property !== 'isTotalPower' ? data.nextFloat() : null,
+  }));
 
   return {
     id,

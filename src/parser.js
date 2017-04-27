@@ -20,7 +20,7 @@ const readChunk = data => {
       content: parser(data),
     });
   } else {
-    throw new Error(`Corrupted file, cannor read chunk: '${chunk.id}'`);
+    throw new Error(`Unrecognized chunk id: '${chunk.id}'`);
   }
 };
 
@@ -38,16 +38,12 @@ export const parse = buffer => {
 
   const head = readHead(data);
   if (head.id !== 'VOX ') {
-    throw new Error(
-      `Invalid file format: expected id 'VOX ', found: '${head.id}'`
-    );
+    throw new Error(`Expected file id 'VOX ', found: '${head.id}'`);
   }
 
   const mainChunk = readBasicChunkData(data);
   if (mainChunk.id !== 'MAIN') {
-    throw new Error(
-      `Invalid file format: expected first chunk to have id 'MAIN, found: ${id}`
-    );
+    throw new Error(`Expected 'MAIN' chunk, found: '${mainChunk.id}'`);
   }
 
   return {
