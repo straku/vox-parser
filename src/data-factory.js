@@ -24,19 +24,9 @@ export const dataFactory = buffer => {
       offset += 4;
       return float;
     },
-    nextPattern(pattern, bytes = 4) {
-      let method;
-      switch (bytes) {
-        case 1:
-          method = 'getUint8';
-          break;
-        default:
-        case 4:
-          method = 'getUint32';
-          break;
-      }
+    nextPattern(pattern, bytes) {
       return pattern.reduce((obj, key) => {
-        obj[key] = data[method](offset, true);
+        obj[key] = data[`getUint${bytes * 4}`](offset, true);
         offset += bytes;
         return obj;
       }, {});
