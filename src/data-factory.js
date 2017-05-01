@@ -26,7 +26,7 @@ export const dataFactory = buffer => {
     },
     nextPattern(pattern, bytes) {
       return pattern.reduce((obj, key) => {
-        obj[key] = data[`getUint${bytes * 4}`](offset, true);
+        obj[key] = data[`getUint${bytes * 8}`](offset, true);
         offset += bytes;
         return obj;
       }, {});
