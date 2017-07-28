@@ -1,24 +1,42 @@
 version: 2
 jobs:
-  build:
+  test-lts:
     docker:
       - image: circleci/node:6.11.1
-
-    working_directory: ~/vox-parser
-
     steps:
       - checkout
-
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies-
-
+          - node-lts-dependencies-{{ checksum "package.json" }}
+          - node-lts-dependencies-
       - run: yarn install
-
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-        
+          key: node-lts-dependencies-{{ checksum "package.json" }}
       - run: yarn test
+  
+  test-latest:
+    docker:
+      - image: circleci/node:8.1.4
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - node-latest-dependencies-{{ checksum "package.json" }}
+          - node-latest-dependencies-
+      - run: yarn install
+      - save_cache:
+          paths:
+            - node_modules
+          key: node-latest-dependencies-{{ checksum "package.json" }}
+      - run: yarn test
+
+workflows:
+  version: 2
+  node-lts:
+    jobs:
+      - test-lts
+  node-latest:
+    jobs:
+      - test-latest
