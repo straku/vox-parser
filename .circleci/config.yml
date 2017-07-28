@@ -1,42 +1,18 @@
 version: 2
 jobs:
-  test-lts:
+  test:
     docker:
-      - image: circleci/node:6.11.1
+      - image: circleci/node:latest
     steps:
       - checkout
       - restore_cache:
           keys:
-          - node-lts-dependencies-{{ checksum "package.json" }}
-          - node-lts-dependencies-
+          - node-dependencies-{{ checksum "package.json" }}
+          - node-dependencies-
       - run: yarn install
       - save_cache:
           paths:
             - node_modules
-          key: node-lts-dependencies-{{ checksum "package.json" }}
+          key: node-dependencies-{{ checksum "package.json" }}
       - run: yarn test
   
-  test-latest:
-    docker:
-      - image: circleci/node:8.1.4
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-          - node-latest-dependencies-{{ checksum "package.json" }}
-          - node-latest-dependencies-
-      - run: yarn install
-      - save_cache:
-          paths:
-            - node_modules
-          key: node-latest-dependencies-{{ checksum "package.json" }}
-      - run: yarn test
-
-workflows:
-  version: 2
-  node-lts:
-    jobs:
-      - test-lts
-  node-latest:
-    jobs:
-      - test-latest
