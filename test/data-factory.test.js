@@ -58,7 +58,7 @@ test('it should return correct pattern from 1 byte buffer', () => {
   // using numbers smaller than 2^8
   const array = new Uint8Array([42, 84, 126, 255]);
   const data = dataFactory(array.buffer);
-  expect(data.nextPattern(pattern, 1)).toMatchObject({
+  expect(data.nextPattern(pattern, 1)).toEqual({
     r: 42,
     g: 84,
     b: 126,
@@ -71,7 +71,7 @@ test('it should return correct pattern from 4 byte buffer', () => {
   // using numbers larger than 2^8 and smaller than 2^32
   const array = new Uint32Array([1024, 2048, 4096]);
   const data = dataFactory(array.buffer);
-  expect(data.nextPattern(pattern, 4)).toMatchObject({
+  expect(data.nextPattern(pattern, 4)).toEqual({
     x: 1024,
     y: 2048,
     z: 4096,
