@@ -4,9 +4,7 @@
   "description": "Vox format parser",
   "author": "Łukasz Strączyński <l.straczynski@hotmail.com>",
   "license": "MIT",
-  "files": [
-    "lib"
-  ],
+  "files": ["lib"],
   "main": "lib/vox-parser.cjs.js",
   "module": "lib/vox-parser.es.js",
   "browser": "lib/vox-parser.umd.js",
@@ -23,19 +21,19 @@
     "build-umd": "rollup --config --environment FORMAT:umd",
     "build-min-umd": "rollup --config --environment FORMAT:umd,MINIFY",
     "check-size": "node tools/check-size.js",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage && codecov"
   },
   "jest": {
     "testEnvironment": "node",
-    "collectCoverageFrom": [
-      "src/*.js"
-    ]
+    "collectCoverageFrom": ["src/*.js"]
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
     "babel-core": "6.25.0",
     "babel-plugin-external-helpers": "6.22.0",
     "babel-preset-env": "1.6.0",
+    "codecov": "2.2.0",
     "glob": "7.1.2",
     "gzip-size": "3.0.0",
     "jest": "20.0.4",
