@@ -4,7 +4,9 @@
   "description": "Vox format parser",
   "author": "Łukasz Strączyński <l.straczynski@hotmail.com>",
   "license": "MIT",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "main": "lib/vox-parser.cjs.js",
   "module": "lib/vox-parser.es.js",
   "browser": "lib/vox-parser.umd.js",
@@ -25,7 +27,9 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "collectCoverageFrom": ["src/*.js"]
+    "collectCoverageFrom": [
+      "src/*.js"
+    ]
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
@@ -43,5 +47,8 @@
     "rollup": "0.45.2",
     "rollup-plugin-babel": "2.7.1",
     "rollup-plugin-uglify": "2.0.1"
+  },
+  "dependencies": {
+    "babel-plugin-rewire": "1.1.0"
   }
 }

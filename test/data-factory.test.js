@@ -1,8 +1,5 @@
 import { dataFactory } from '../src/data-factory';
-
-function charCode(char) {
-  return char.charCodeAt(0);
-}
+import { charCode, fillWithString } from './utils';
 
 test('it should correctly test if there is data left in the buffer', () => {
   const buffer = new ArrayBuffer(10);
@@ -84,10 +81,7 @@ test('it should process whole buffer', () => {
   const view = new DataView(buffer);
 
   // fill buffer via DataView
-  view.setUint8(0, charCode('T'));
-  view.setUint8(1, charCode('E'));
-  view.setUint8(2, charCode('S'));
-  view.setUint8(3, charCode('T'));
+  fillWithString(view, 0, 'TEST');
   view.setUint32(4, 42, true);
   view.setFloat32(8, 42.42, true);
 
