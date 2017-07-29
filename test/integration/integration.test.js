@@ -4,7 +4,6 @@ import path from 'path';
 import glob from 'glob';
 
 import { parse } from '../../src/index';
-import { log } from '../../src/logger';
 
 function shortenChunkArray(chunk, name) {
   return Object.assign(chunk, {
