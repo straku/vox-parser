@@ -1,5 +1,9 @@
 # vox-parser
 
+[![Build Status][build-badge]][build-url]
+[![Code Coverage][coverage-badge]][coverage-url]
+[![Gzip Size][size-badge]][size-url]
+
 `vox-parser` is a tiny library (currently UMD bundle weights `967 B` gzipped) for parsing voxel models saved in vox format used by [MagicalVoxel][magical-voxel]. Example models and specification of `vox` file format can be found [here][vox-format-repo].
 
 ## Installation
@@ -162,3 +166,10 @@ fetch('/static/example.vox')
 [vox-format-repo]: https://github.com/ephtracy/voxel-model
 [array-buffer-mdn]: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
 [data-view-mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView
+[build-badge]: https://img.shields.io/circleci/project/github/straku/vox-parser.svg?style=flat-square
+[build-url]: https://circleci.com/gh/straku/vox-parser
+[coverage-badge]: https://img.shields.io/codecov/c/github/straku/vox-parser.svg?style=flat-square
+[coverage-url]: https://codecov.io/gh/straku/vox-parser
+[size-badge]: http://img.badgesize.io/https://unpkg.com/vox-parser/lib/vox-parser.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
+[size-url]: https://unpkg.com/vox-parser/lib/vox-parser.umd.min.js
+ 
