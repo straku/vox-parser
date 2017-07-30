@@ -4,7 +4,7 @@
 [![Code Coverage][coverage-badge]][coverage-url]
 [![Gzip Size][size-badge]][size-url]
 
-`vox-parser` is a tiny library (currently UMD bundle weights `967 B` gzipped) for parsing voxel models saved in vox format used by [MagicalVoxel][magical-voxel]. Example models and specification of `vox` file format can be found [here][vox-format-repo].
+`vox-parser` is a tiny library for parsing voxel models saved in vox format used by [MagicalVoxel][magical-voxel]. Example models and specification of `vox` file format can be found [here][vox-format-repo].
 
 ## Installation
 
