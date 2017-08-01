@@ -1,10 +1,12 @@
 {
   "name": "vox-parser",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Vox format parser",
   "author": "Łukasz Strączyński <l.straczynski@hotmail.com>",
   "license": "MIT",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "main": "lib/vox-parser.cjs.js",
   "module": "lib/vox-parser.es.js",
   "browser": "lib/vox-parser.umd.js",
@@ -26,7 +28,9 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "collectCoverageFrom": ["src/*.js"]
+    "collectCoverageFrom": [
+      "src/*.js"
+    ]
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
