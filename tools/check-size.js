@@ -1,5 +1,6 @@
 const { readFileSync } = require('fs');
 const { execSync } = require('child_process');
+
 const glob = require('glob');
 const gzipSize = require('gzip-size');
 
@@ -54,36 +55,73 @@ const result = filesAfter.reduce((result, file) => {
   return result;
 }, []);
 
-const columnLengths = [
-  Math.max(...result.map(file => file.name.length)),
-  Math.max(...result.map(file => file.sizeBefore.length)),
-  Math.max(...result.map(file => file.sizeAfter.length)),
-  Math.max(...result.map(file => file.diff.length)),
+const header = [
+  { key: 'name', label: 'file name', align: 'left' },
+  { key: 'sizeBefore', label: 'size old', align: 'right' },
+  { key: 'sizeAfter', label: 'size new', align: 'right' },
+  { key: 'diff', label: 'diff', align: 'right' },
 ];
 
-const totalLength = columnLengths.reduce((a, b) => a + b, 0) + 16;
-
-let log = '\n ';
-
-log += padRight('file name', columnLengths[0] + 2) + ' |';
-log += padLeft('size old', columnLengths[1] + 2) + ' |';
-log += padLeft('size new', columnLengths[2] + 2) + ' |';
-log += padLeft('diff', columnLengths[3] + 2);
-
-log += '\n';
-
-for (let i = 0; i < totalLength; i++) {
-  log += '-';
+function getWidths(body) {
+  const keys = header.map(column => column.key);
+  const headerWidths = header.map(column => column.label.length);
+  return keys.map((key, i) => {
+    const headerColumnWidth = headerWidths[i];
+    const maxBodyColumnWidth = body.reduce((width, row) => {
+      const { length } = row[key];
+      if (length > width) return length;
+      return width;
+    }, 0);
+    return Math.max(headerColumnWidth, maxBodyColumnWidth);
+  });
 }
 
-result.forEach(file => {
-  log += '\n ';
-  log += padRight(file.name, columnLengths[0] + 2) + ' |';
-  log += padLeft(file.sizeBefore, columnLengths[1] + 2) + ' |';
-  log += padLeft(file.sizeAfter, columnLengths[2] + 2) + ' |';
-  log += padLeft(file.diff, columnLengths[3] + 2);
-});
+function getSeparator(width, char = '-') {
+  return char.repeat(width);
+}
 
-log += '\n';
+function printTable(body) {
+  const keys = header.map(c => c.name);
+  const widths = getWidths(body).map(w => w + 1);
+  const length = widths.reduce((total, w) => total + w, 0);
 
-console.log(log);
+  let buffer = '';
+
+  buffer += '\n';
+
+  buffer += ' '; // padding left
+
+  const tableHead = header
+    .map((c, i) => {
+      if (c.align === 'left') return padRight(c.label, widths[i]);
+      else return padLeft(c.label, widths[i]);
+    })
+    .join(' |');
+
+  buffer += tableHead;
+
+  buffer += '\n';
+
+  buffer += getSeparator(length + 8);
+
+  buffer += '\n';
+
+  buffer += body
+    .map(
+      file =>
+        ' ' +
+        [
+          padRight(file.name, widths[0]),
+          padLeft(file.sizeBefore, widths[1]),
+          padLeft(file.sizeAfter, widths[2]),
+          padLeft(file.diff, widths[3]),
+        ].join(' |')
+    )
+    .join('\n');
+
+  buffer += '\n';
+
+  console.log(buffer);
+}
+
+printTable(result);
