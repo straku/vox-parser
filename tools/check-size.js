@@ -2,11 +2,26 @@ const { readFileSync } = require('fs');
 const { execSync } = require('child_process');
 const glob = require('glob');
 const gzipSize = require('gzip-size');
-const padLeft = require('lodash.padleft');
-const padRight = require('lodash.padright');
 
-const formatSize = size =>
-  (Math.abs(size) < 1024 ? `${size} B` : `${(size / 1024).toFixed(2)} kB`);
+function padLeft(string, size, char = ' ') {
+  const diff = size - string.length;
+  if (diff > 0) return char.repeat(diff) + string;
+  return string;
+}
+
+function padRight(string, size, char = ' ') {
+  const diff = size - string.length;
+  if (diff > 0) return string + char.repeat(diff);
+  return string;
+}
+
+function formatSize(size) {
+  const ranges = ['B', 'kB', 'MB', 'GB'];
+  const rangeIndex = Math.floor(Math.abs(size) / 1024);
+  const divider = rangeIndex * 1024 || 1;
+  const formattedSize = (size / divider).toFixed(rangeIndex ? 2 : 0);
+  return `${formattedSize} ${ranges[rangeIndex]}`;
+}
 
 const readFiles = () =>
   glob.sync('lib/*.js').map(file => {
@@ -46,14 +61,29 @@ const columnLengths = [
   Math.max(...result.map(file => file.diff.length)),
 ];
 
+const totalLength = columnLengths.reduce((a, b) => a + b, 0) + 16;
+
+let log = '\n ';
+
+log += padRight('file name', columnLengths[0] + 2) + ' |';
+log += padLeft('size old', columnLengths[1] + 2) + ' |';
+log += padLeft('size new', columnLengths[2] + 2) + ' |';
+log += padLeft('diff', columnLengths[3] + 2);
+
+log += '\n';
+
+for (let i = 0; i < totalLength; i++) {
+  log += '-';
+}
+
 result.forEach(file => {
-  console.log(
-    padRight(file.name, columnLengths[0] + 2),
-    '|',
-    padLeft(file.sizeBefore, columnLengths[1] + 2),
-    '|',
-    padLeft(file.sizeAfter, columnLengths[2] + 2),
-    '|',
-    padLeft(file.diff, columnLengths[3] + 2)
-  );
+  log += '\n ';
+  log += padRight(file.name, columnLengths[0] + 2) + ' |';
+  log += padLeft(file.sizeBefore, columnLengths[1] + 2) + ' |';
+  log += padLeft(file.sizeAfter, columnLengths[2] + 2) + ' |';
+  log += padLeft(file.diff, columnLengths[3] + 2);
 });
+
+log += '\n';
+
+console.log(log);
