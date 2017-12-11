@@ -7,12 +7,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - node-dependencies-{{ checksum "package.json" }}
+          - node-dependencies-{{ checksum "yarn.lock" }}
           - node-dependencies-
       - run: yarn install
       - save_cache:
           paths:
             - node_modules
-          key: node-dependencies-{{ checksum "package.json" }}
+          key: node-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn run coverage
   
